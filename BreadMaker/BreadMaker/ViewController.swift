@@ -15,7 +15,8 @@ class ViewController: UIViewController {
     var zaman : Timer?
     var price = 1.0
     var flour = 1000
-    var flourcost = 15.0
+    var flourcost = 35.0
+    var timeint = 1.0
     @IBOutlet weak var flourbuttonoutlet: UIButton!
     @IBOutlet weak var costLabel: UILabel!
     @IBOutlet weak var kg: UILabel!
@@ -28,17 +29,17 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         breadLabel.text = "Bread: \(bread)"
         inventoryLabel.text = "Inventory: \(inventory)"
-        mytimer()
+        zaman = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(starttimer), userInfo: nil, repeats: true)
         fundsLabel.text = "Available Funds: \(funds)"
         breadPrice.text = "Price per Bread: \(price)"
+        costLabel.text = "$ \(Int(flourcost))"
         
         
-    }
-    func mytimer () {
-        zaman = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(starttimer), userInfo: nil, repeats: true)
     }
     
+    
     @objc func starttimer() {
+        
         if Int(funds) < Int(flourcost) {
             flourbuttonoutlet.isEnabled = false
         }
@@ -49,8 +50,8 @@ class ViewController: UIViewController {
         
         if inventory > 0
         {
-            sales+=1
-            funds += price
+            
+            funds = (funds + price)
             
             print("FUNDS SALES: \(funds)")
             fundsLabel.text = "Available Funds:$ \(Int(funds))"
@@ -71,21 +72,30 @@ class ViewController: UIViewController {
     }
     @IBAction func lowerButton(_ sender: Any) {
         price-=0.2
+        timeint-=0.05
+        print(timeint)
+        zaman = Timer.scheduledTimer(timeInterval: timeint, target: self, selector: #selector(starttimer), userInfo: nil, repeats: true)
         breadPrice.text = "Price per Bread:$ \(price)"
         
     }
     @IBAction func raiseButton(_ sender: Any) {
+        price+=0.2
+        //timeint+=0.05
+        print(timeint)
+        zaman = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(starttimer), userInfo: nil, repeats: true)
+        breadPrice.text = "Price per Bread:$ \(price)"
+        
+        
     }
     @IBAction func flourButton(_ sender: Any) {
         flour+=1000
         
-        zaman?.invalidate()
+        
         funds = funds - Double(flourcost)
-        print("FUNDSSSSSSS: \(funds)")
-        fundsLabel.text = "Available Funds:$ \(funds)"
+        fundsLabel.text = "Available Funds:$ \(Int(funds))"
         kg.text = "\(flour) Kg"
         //zaman?.invalidate()
-        mytimer()
+        
         
     }
    
