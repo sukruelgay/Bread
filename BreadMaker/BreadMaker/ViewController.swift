@@ -15,7 +15,7 @@ class ViewController: UIViewController {
     var zaman : Timer?
     var price = 1.0
     var flour = 1000
-    var flourcost = 15
+    var flourcost = 15.0
     @IBOutlet weak var flourbuttonoutlet: UIButton!
     @IBOutlet weak var costLabel: UILabel!
     @IBOutlet weak var kg: UILabel!
@@ -39,7 +39,7 @@ class ViewController: UIViewController {
     }
     
     @objc func starttimer() {
-        if Int(funds) < flourcost {
+        if Int(funds) < Int(flourcost) {
             flourbuttonoutlet.isEnabled = false
         }
         else {
@@ -50,8 +50,8 @@ class ViewController: UIViewController {
         if inventory > 0
         {
             sales+=1
+            funds += price
             
-            funds = Double(sales * (Int(Double(price))))
             print("FUNDS SALES: \(funds)")
             fundsLabel.text = "Available Funds:$ \(Int(funds))"
             
