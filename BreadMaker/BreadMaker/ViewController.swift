@@ -10,19 +10,21 @@ import UIKit
 class ViewController: UIViewController {
     var bread = 0
     var arttir = 0
-    var inventory = 0
-    var funds = 0.0
+    var inventory = 400
+    var funds = 10000.0
     var sales = 0
     var zaman : Timer?
     var zaman2: Timer?
     var price = 1.0
-    var flour = 500
+    var flour = 50
     var flourcost = 35.0
     var timeint = 1.0
     var autobread = 25.0
+    
+    @IBOutlet weak var breadmachine: UIButton!
+    @IBOutlet weak var makebreadoutlet: UIButton!
     @IBOutlet weak var flourbuttonoutlet: UIButton!
     @IBOutlet weak var costLabel: UILabel!
-    @IBOutlet weak var otobreadoutlet: UIButton!
     @IBOutlet weak var kg: UILabel!
     @IBOutlet weak var breadsecond: UILabel!
     @IBOutlet weak var breadPrice: UILabel!
@@ -34,33 +36,36 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         breadLabel.text = "Bread: \(bread)"
         inventoryLabel.text = "Inventory: \(inventory)"
+        costLabel.text = "Cost: $ \(Int(flourcost))"
         zaman = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(starttimer), userInfo: nil, repeats: true)
         zaman2 = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(zamanbaslat), userInfo: nil, repeats: true)
         fundsLabel.text = "Available Funds: \(funds)"
         breadPrice.text = "Price per Bread: \(price)"
-        costLabel.text = "$ \(Int(flourcost))"
+        
         
         
     }
 
     
     @objc func starttimer() {
+        flourfunc()
         
         if Int(funds) < Int(flourcost) {
-            flourbuttonoutlet.isEnabled = false
+        flourbuttonoutlet.isEnabled = false
         }
         else {
             flourbuttonoutlet.isEnabled = true
             
         }
-        
+    
         if Int(funds) < Int(autobread) {
-            otobreadoutlet.isEnabled = false
+            breadmachine.isEnabled = false
             
         }
         else {
-            otobreadoutlet.isEnabled = true
+            breadmachine.isEnabled = true
         }
+ 
         
         if inventory > 0
         {
@@ -73,7 +78,22 @@ class ViewController: UIViewController {
             inventory-=1
             inventoryLabel.text = "Inventory: \(inventory)"
         }
+        
     
+    }
+    
+    func flourfunc() {
+        if flour <= 10 {
+            zaman2?.invalidate()
+            makebreadoutlet.isEnabled = false
+            
+        }
+        else {
+            makebreadoutlet.isEnabled = true
+            zamanbaslat()
+            //zaman2 = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(zamanbaslat), userInfo: nil, repeats: true)
+        }
+        
     }
     @IBAction func breadButton(_ sender: Any) {
         bread+=1
@@ -105,6 +125,7 @@ class ViewController: UIViewController {
     }
     @IBAction func flourButton(_ sender: Any) {
         flour+=500
+        flourcost+=3
         funds = funds - Double(flourcost)
         fundsLabel.text = "Available Funds:$ \(Int(funds))"
         kg.text = "\(flour) Kg"
@@ -112,8 +133,9 @@ class ViewController: UIViewController {
         
         
     }
-    @IBAction func otobread(_ sender: Any) {
-        funds = funds - autobread
+    @IBAction func breadmachine(_ sender: Any) {
+        funds = funds - Double(autobread)
+        
         autobread+=5
         otobreadprice.text = "\(autobread)"
         arttir+=3
@@ -121,13 +143,21 @@ class ViewController: UIViewController {
     }
     
     @objc func zamanbaslat(){
-        print("zaman2 basladi")
         if arttir > 0 {
+            breadsecond.text = "Bread Per Second: \(arttir)"
+            print(funds)
+            fundsLabel.text = "Available Funds: \(Int(funds))"
             bread = bread + arttir
             inventory = inventory + arttir
             inventoryLabel.text = "Inventory: \(inventory)"
             breadLabel.text = "Bread: \(bread)"
+            flour-=arttir
+            kg.text = "\(flour) Kg"
     }
+        else
+        {
+            
+        }
 
 }
 }
